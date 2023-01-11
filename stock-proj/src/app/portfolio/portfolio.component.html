@@ -1,0 +1,83 @@
+<div class="container">
+    <h2>My Portfolio</h2>
+    <h4>Money in Wallet: $ {{ cash | number:'0.2-2' }} </h4>
+
+    <div class="mt-4" style="text-align: center;">
+        <ngb-alert #selfClosingAlert *ngIf="successMessage" type="danger" (closed)="successMessage = '' ">{{
+            successMessage }}
+        </ngb-alert>
+    </div>
+
+    <div *ngIf="mystockArr.length == 0" style="text-align: center;">
+        <ngb-alert type="warning" [dismissible]="false">Currently you don't have any stock in your watchlist.</ngb-alert>
+    </div>
+
+    <div class="card" *ngFor="let item of mystockArr;">
+        <div class="card-header">
+            <div style="display: inline-block;">
+                <h3>{{ item.ticker }}</h3>
+            </div>
+            <div style="display: inline-block; color: gray;">
+                <h5>&nbsp;&nbsp;{{ item.name }}</h5>
+            </div>
+        </div>
+
+        <div class="card-body row">
+            <div class="col">
+                <h6>Quantity:</h6>
+                <h6>Avg. Cost / Share:</h6>
+                <h6>Total Cost:</h6>
+            </div>
+            <div class="col" style="text-align: right;">
+                <h6>{{item.quantity | number:'0.2-2'}}</h6>
+                <div *ngIf="item.quantity != 0">
+                    <h6>{{item.totalCost/item.quantity | number:'0.2-2'}}</h6>
+                </div>
+                <div *ngIf="item.quantity == 0">
+                    <h6>{{0 | number:'0.2-2'}}</h6>
+                </div>
+                <h6>{{item.totalCost | number:'0.2-2'}}</h6>
+            </div>
+            <div class="col">
+                <h6>Change:</h6>
+                <h6>Current Price:</h6>
+                <h6>Market Value</h6>
+            </div>
+
+            <div class="col" [class.text-success]="item.totalCost/item.quantity > map.get(item.ticker)! + tolerance"
+                [class.text-danger]="item.totalCost/item.quantity + tolerance < map.get(item.ticker)!"
+                style="text-align: right;">
+                <div *ngIf="item.quantity != 0">
+                    <h6>{{ item.totalCost/item.quantity - map.get(item.ticker)! | number:'0.2-2' }}</h6>
+                    <svg *ngIf="item.totalCost/item.quantity > map.get(item.ticker)! + tolerance" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                        <path
+                            d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+                    </svg>
+                    <svg *ngIf="item.totalCost/item.quantity + tolerance < map.get(item.ticker)!" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                        <path
+                            d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                    </svg>
+                </div>
+                <div *ngIf="item.quantity == 0">
+                    <h6>{{0 | number:'0.2-2'}}</h6>
+                </div>
+                <h6>{{ map.get(item.ticker) | number:'0.2-2'}}</h6>
+                <h6>{{ item.quantity * map.get(item.ticker)! | number:'0.2-2' }}</h6>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <div class="d-flex flex-row-reverse">
+                <div *ngIf="true" class="ms-4">
+                    <button type="button" class="btn btn-danger" (click)="goTransaction(item, false)">Sell</button>
+                </div>
+                <div class="ms-4">
+                    <button type="button" class="btn btn-success" (click)="goTransaction(item, true)">Buy</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

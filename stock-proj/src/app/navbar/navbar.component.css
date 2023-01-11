@@ -1,0 +1,6 @@
+.nav-item .active {
+    border-radius: 1em;
+    border-style: solid;
+    border-color: white;
+    border-width: 1px;
+}

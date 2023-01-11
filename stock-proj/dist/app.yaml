@@ -1,0 +1,9 @@
+runtime: nodejs16 # or another supported version
+api_version: 1
+threadsafe: true
+handlers:
+- url: /
+ static_files: stock-proj/index.html
+ upload: stock-proj/index.html
+- url: /
+static_dir: stock-proj
